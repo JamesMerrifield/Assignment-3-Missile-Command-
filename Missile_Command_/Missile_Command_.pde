@@ -1,3 +1,19 @@
+/*Author James Merrifield, Blake Green, Corey Allen.
+
+Conduct a collaborative software development project.
+Solve problems and design software solutions using a high-level programming language and a range of technologies, protocols, and algorithms.
+Build a program with visual elements.
+Reflect on the work of others and provide feedback
+
+We were tasked to make a copy of the classic arcade game Missile Command!.
+The concept for this game is fairly simple – there are six cities that sit at the bottom of the screen that are attacked by missiles falling randomly from the top of the screen.
+The player is in control of an anti-missile battery that fires counter-missiles to intercept and destroy the ballistic missiles raining down.
+The player controls a cross-hair that specifies where the counter-missile will detonate and when the counter-missile reaches the location, it explodes leaving an expanding fireball that lasts for several seconds.
+All ballistic missiles that come in contact with the fireball are destroyed.
+There are a finite number of anti-missiles and once depleted, the cities are left defenseless. The game is broken into rounds that contain a specified number of ballistic missiles.
+*/
+
+
 int wave;
 Particle p[];
 PVector g;
@@ -41,18 +57,17 @@ boolean satellite_is_alive;
 int smart_bomb;
 boolean smart_bomb_activated;
 float smart_bomber_originalvelx,smart_bomber_originalvely;
-float smart_timer;
+float Stimer;
 boolean frame;
 int score_reduction;
-PImage background1;
-
+PImage background1, background;
 
 void setup(){
   size(800, 600);
   noCursor();
   reset=false;
-  background1 = loadImage("PlaceHolderBackground.png");
-  
+  background1 = loadImage("Background.png");
+  background = loadImage("Background1.png");
   start();
 }
 
@@ -61,7 +76,7 @@ void start(){
   enemy_counter=0;
   bomber_is_alive=false;
   satellite_is_alive=false;
-  smart_timer=1;
+  Stimer=1;
   start=reset;
   score=0;
   c=0;
@@ -148,16 +163,9 @@ void draw(){
   
   //displaying the start screen and waiting for the input
   if(start==false){
-    background(255,255,255);
+    background(background);
     crosshair();
-    textSize(55);
-    textAlign(CENTER);
-    fill(125,0,0);
-    text("Missile Command!",width/2,(height/2)-10);
-    textSize(16);
-    text("Press Spacebar",width/2,(height/2)+10);
-    
-    if(keyPressed==true && key== ' ')
+      if(keyPressed==true && key== ' ')
       start=true;
   }
 }
@@ -405,7 +413,7 @@ void shoot_missile(){
               
               //to stop the smart bomb to be activated multiple times
               smart_bomb_activated=true;
-              smart_timer=160;
+              Stimer=160;
             }
             
             //checking if the smart bomb is approaching the incomng missile and is not too close to expected explosion(150 pixels)
@@ -426,16 +434,16 @@ void shoot_missile(){
               smart_bomb_activated=true;
               
               //setting a timer for the slowing down effect
-              smart_timer=160;
+              Stimer=160;
             }
             
             //checking to see if the particle has passsed the explosion site
-            else if(smart_timer <= 1 && smart_bomb_activated==true && missiles[i].position.y - p[smart_bomb].position.y < 0 
+            else if(Stimer <= 1 && smart_bomb_activated==true && missiles[i].position.y - p[smart_bomb].position.y < 0 
             || ((tvelx > 0 && missiles[i].position.x - p[smart_bomb].position.x < -50)
             ||(tvelx < 0 && p[smart_bomb].position.x - missiles[i].position.x  < - 50))  ){
               
               //checking if the timer is off
-              if(smart_timer<=1){
+              if(Stimer<=1){
                 
                 //reseting the particle
                 p[smart_bomb].velocity=new PVector(smart_bomber_originalvelx , smart_bomber_originalvely);
@@ -448,7 +456,7 @@ void shoot_missile(){
               //just to keep tract of its velocity and overwrite any false updations
               p[smart_bomb].velocity=new PVector(tvelx,tvely);
               if(frame==true){
-                smart_timer--;
+                Stimer--;
                 frame=false;  
               }
             }
@@ -680,7 +688,7 @@ void add_cities(float particleX,float particleY){
   for(int i=0;i<cities.length;i++){
     switch(i){
       case 0:{
-        fill(0);
+        fill (0);
         dimensions[0]=2*distance+(distance/192f);
         dimensions[1]=altitude-5;
         dimensions[2]=(distance/2f)-(distance/96f);
@@ -729,7 +737,7 @@ void add_cities(float particleX,float particleY){
     }
     else{
       noStroke();
-      fill(123,0,0);
+      fill(180,0,0);
       city_dead[i]=true;
     }
     rect(dimensions[0],dimensions[1],dimensions[2],dimensions[3]);
